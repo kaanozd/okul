@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans:  'DM Sans', system-ui, sans-serif;
+  --bg:    #f7f5f0;
+  --card:  #ffffff;
+  --text:  #1c1a16;
+  --muted: #7a7870;
+  --border:#e4e2db;
+  --radius: 16px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── HERO ── */
+.hero {
+  text-align: center;
+  padding: 4rem 1.5rem 3rem;
+  border-bottom: 1px solid var(--border);
+  background: #fff;
+}
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.hero p {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 420px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── GRID ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+/* ── ROOM CARD ── */
+.room {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.2s;
+  scroll-margin-top: 24px;
+}
+.room:hover { box-shadow: 0 6px 28px rgba(0,0,0,0.07); transform: translateY(-2px); }
+
+.room.highlight {
+  outline: 3px solid currentColor;
+  outline-offset: 2px;
+  animation: pulse 0.6s ease;
+}
+@keyframes pulse {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.025); }
+  100% { transform: scale(1); }
+}
+
+.room-header {
+  padding: 18px 20px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.room-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 18px;
+}
+.room-meta { flex: 1; }
+.room-badge {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 99px;
+  margin-bottom: 4px;
+}
+.room-title {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+.room-body {
+  padding: 0 20px 20px;
+  font-size: 15px;
+  line-height: 1.75;
+  color: #555;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+  margin-top: 2px;
+}
+
+/* colors */
+.c-blue   { --hue: #185FA5; --soft: #dbeeff; }
+.c-teal   { --hue: #0F6E56; --soft: #d0f5ea; }
+.c-purple { --hue: #534AB7; --soft: #e8e6fc; }
+.c-amber  { --hue: #7A5200; --soft: #fdf0d0; }
+.c-coral  { --hue: #993C1D; --soft: #fde8df; }
+.c-green  { --hue: #3B6D11; --soft: #dff0cb; }
+.c-gray   { --hue: #444441; --soft: #edede8; }
+
+.room-header  { color: var(--hue); }
+.room-icon    { background: var(--soft); color: var(--hue); }
+.room-badge   { background: var(--soft); color: var(--hue); }
+.room-title   { color: var(--text); }
+.room.highlight { color: var(--hue); }
+
+/* ── FOOTER ── */
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 13px;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <p class="hero-eyebrow">Welcome</p>
+  <h1>Our School</h1>
+  <p>Scan a QR code in any room to learn more about that space.</p>
+</header>
+
+<main class="grid" id="rooms-grid">
+
+  <article class="room c-blue" id="classroom">
+    <div class="room-header">
+      <div class="room-icon">&#128218;</div>
+      <div class="room-meta">
+        <span class="room-badge">Classroom</span>
+        <h2 class="room-title">Classroom</h2>
+      </div>
+    </div>
+    <p class="room-body">This is our classroom. We have our lessons here every day. It is clean, bright, and comfortable for learning.</p>
+  </article>
+
+  <article class="room c-teal" id="library">
+    <div class="room-header">
+      <div class="room-icon">&#128366;</div>
+      <div class="room-meta">
+        <span class="room-badge">Library</span>
+        <h2 class="room-title">Library</h2>
+      </div>
+    </div>
+    <p class="room-body">This is the school library. Students can read books, study, and do research here. It is a quiet and peaceful place.</p>
+  </article>
+
+  <article class="room c-purple" id="teachers-room">
+    <div class="room-header">
+      <div class="room-icon">&#128101;</div>
+      <div class="room-meta">
+        <span class="room-badge">Teachers' Room</span>
+        <h2 class="room-title">Teachers' Room</h2>
+      </div>
+    </div>
+    <p class="room-body">This is the teachers' room. Teachers prepare their lessons and take a break here.</p>
+  </article>
+
+  <article class="room c-amber" id="principals-office">
+    <div class="room-header">
+      <div class="room-icon">&#127970;</div>
+      <div class="room-meta">
+        <span class="room-badge">Principal's Office</span>
+        <h2 class="room-title">Principal's Office</h2>
+      </div>
+    </div>
+    <p class="room-body">This is the principal's office. The principal manages the school and helps students and teachers.</p>
+  </article>
+
+  <article class="room c-coral" id="counselors-office">
+    <div class="room-header">
+      <div class="room-icon">&#128172;</div>
+      <div class="room-meta">
+        <span class="room-badge">Counselor's Office</span>
+        <h2 class="room-title">Counselor's Office</h2>
+      </div>
+    </div>
+    <p class="room-body">This is the counselor's office. Students can talk about their problems and get support here.</p>
+  </article>
+
+  <article class="room c-green" id="science-lab">
+    <div class="room-header">
+      <div class="room-icon">&#128300;</div>
+      <div class="room-meta">
+        <span class="room-badge">Science Lab</span>
+        <h2 class="room-title">Science Lab</h2>
+      </div>
+    </div>
+    <p class="room-body">This is the science laboratory. Students do experiments and learn science in a fun way here.</p>
+  </article>
+
+  <article class="room c-blue" id="computer-lab">
+    <div class="room-header">
+      <div class="room-icon">&#128187;</div>
+      <div class="room-meta">
+        <span class="room-badge">Computer Lab</span>
+        <h2 class="room-title">Computer Lab</h2>
+      </div>
+    </div>
+    <p class="room-body">This is the computer lab. Students use computers and learn technology here.</p>
+  </article>
+
+  <article class="room c-coral" id="gym">
+    <div class="room-header">
+      <div class="room-icon">&#127944;</div>
+      <div class="room-meta">
+        <span class="room-badge">Gym</span>
+        <h2 class="room-title">Gym</h2>
+      </div>
+    </div>
+    <p class="room-body">This is the gym. Students do sports and physical activities here.</p>
+  </article>
+
+  <article class="room c-green" id="school-yard">
+    <div class="room-header">
+      <div class="room-icon">&#127807;</div>
+      <div class="room-meta">
+        <span class="room-badge">School Yard</span>
+        <h2 class="room-title">School Yard</h2>
+      </div>
+    </div>
+    <p class="room-body">This is the school yard. Students play games and spend their break time here.</p>
+  </article>
+
+  <article class="room c-amber" id="cafeteria">
+    <div class="room-header">
+      <div class="room-icon">&#127869;</div>
+      <div class="room-meta">
+        <span class="room-badge">Cafeteria</span>
+        <h2 class="room-title">Cafeteria</h2>
+      </div>
+    </div>
+    <p class="room-body">This is the cafeteria. Students eat their meals and relax here.</p>
+  </article>
+
+  <article class="room c-gray" id="entrance">
+    <div class="room-header">
+      <div class="room-icon">&#128682;</div>
+      <div class="room-meta">
+        <span class="room-badge">Entrance</span>
+        <h2 class="room-title">Entrance</h2>
+      </div>
+    </div>
+    <p class="room-body">This is the main entrance of the school. Students and visitors enter the school from here.</p>
+  </article>
+
+</main>
+
+<footer>Our School &mdash; Room Guide</footer>
+
+<script>
+function highlightRoom() {
+  document.querySelectorAll('.room.highlight').forEach(el => el.classList.remove('highlight'));
+  const id = window.location.hash.slice(1);
+  if (!id) return;
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.add('highlight');
+    setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 80);
+  }
+}
+window.addEventListener('hashchange', highlightRoom);
+highlightRoom();
+</script>
+</body>
+</html>

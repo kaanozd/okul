@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Print Sheet</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f7f5f0; padding: 2rem 1.5rem; color: #1c1a16; }
+
+.setup { background: #fff; border: 1px solid #e4e2db; border-radius: 14px; padding: 2rem; max-width: 560px; margin: 0 auto 2rem; }
+.setup h1 { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+.setup p  { font-size: 14px; color: #888; margin-bottom: 18px; line-height: 1.6; }
+.row { display: flex; gap: 10px; }
+.row input { flex: 1; border: 1px solid #d8d6cf; border-radius: 9px; padding: 10px 14px; font-size: 14px; outline: none; }
+.row input:focus { border-color: #185FA5; box-shadow: 0 0 0 3px rgba(24,95,165,0.12); }
+.row button { background: #185FA5; color: #fff; border: none; border-radius: 9px; padding: 10px 22px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; }
+.hint { font-size: 12px; color: #aaa; margin-top: 8px; }
+.hint code { background: #f0efe9; padding: 1px 5px; border-radius: 4px; font-family: monospace; font-size: 11px; }
+
+#sheet { display: none; max-width: 900px; margin: 0 auto; }
+#sheet.on { display: block; }
+.sheet-tip { text-align: center; font-size: 12px; color: #bbb; margin-bottom: 1.5rem; }
+
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+
+.qr-card { background: #fff; border: 1.5px dashed #d8d6cf; border-radius: 12px; padding: 18px 14px 14px; display: flex; flex-direction: column; align-items: center; gap: 10px; page-break-inside: avoid; break-inside: avoid; }
+.qr-wrap { width: 160px; height: 160px; }
+.qr-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-align: center; padding: 4px 12px; border-radius: 99px; }
+
+@media print {
+  body { background: #fff; padding: 0; }
+  .setup { display: none; }
+  #sheet { display: block !important; }
+  .sheet-tip { display: none; }
+  .grid { gap: 10px; }
+}
+</style>
+</head>
+<body>
+
+<div class="setup">
+  <h1>QR Code Print Sheet</h1>
+  <p>Siteyi host ettikten sonra adresini gir, QR kodlarını oluştur ve yazdır. Her QR kodu ilgili odanın sayfasına yönlendirir.</p>
+  <div class="row">
+    <input id="url" type="text" placeholder="https://kullanicin.github.io/school" />
+    <button onclick="go()">Oluştur</button>
+  </div>
+  <p class="hint">Örnek: <code>https://myschool.github.io/school</code> &nbsp;·&nbsp; Sona <code>/</code> ekleme</p>
+</div>
+
+<div id="sheet">
+  <p class="sheet-tip">Kes · Her QR'ı ilgili odaya as · Okutulunca direkt o odanın sayfası açılır</p>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+const ROOMS = [
+  { slug:'classroom',         label:'CLASSROOM',          color:'#185FA5', light:'#dbeeff' },
+  { slug:'library',           label:'LIBRARY',             color:'#0F6E56', light:'#d0f5ea' },
+  { slug:'teachers-room',     label:"TEACHERS' ROOM",      color:'#534AB7', light:'#e8e6fc' },
+  { slug:'principals-office', label:"PRINCIPAL'S OFFICE",  color:'#7A5200', light:'#fdf0d0' },
+  { slug:'counselors-office', label:"COUNSELOR'S OFFICE",  color:'#993C1D', light:'#fde8df' },
+  { slug:'science-lab',       label:'SCIENCE LAB',         color:'#3B6D11', light:'#dff0cb' },
+  { slug:'computer-lab',      label:'COMPUTER LAB',        color:'#185FA5', light:'#dbeeff' },
+  { slug:'art-room',          label:'ART ROOM',            color:'#A0295E', light:'#fce8f0' },
+  { slug:'music-room',        label:'MUSIC ROOM',          color:'#6B3A9E', light:'#efe8fc' },
+  { slug:'gym',               label:'GYM',                 color:'#993C1D', light:'#fde8df' },
+  { slug:'school-yard',       label:'SCHOOL YARD',         color:'#3B6D11', light:'#dff0cb' },
+  { slug:'cafeteria',         label:'CAFETERIA',           color:'#7A5200', light:'#fdf0d0' },
+  { slug:'restrooms',         label:'RESTROOMS',           color:'#2E7D9A', light:'#d9f0f9' },
+  { slug:'entrance',          label:'ENTRANCE',            color:'#444441', light:'#edede8' },
+  { slug:'infirmary',         label:'INFIRMARY',           color:'#C0392B', light:'#fde8e6' },
+];
+
+function go() {
+  let base = document.getElementById('url').value.trim().replace(/\/$/, '');
+  if (!base) { alert('URL gir!'); return; }
+  if (!base.startsWith('http')) base = 'https://' + base;
+
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+
+  ROOMS.forEach(r => {
+    const card = document.createElement('div');
+    card.className = 'qr-card';
+
+    const wrap = document.createElement('div');
+    wrap.className = 'qr-wrap';
+    card.appendChild(wrap);
+
+    const label = document.createElement('div');
+    label.className = 'qr-label';
+    label.textContent = r.label;
+    label.style.background = r.light;
+    label.style.color = r.color;
+    card.appendChild(label);
+
+    grid.appendChild(card);
+
+    new QRCode(wrap, {
+      text: base + '/' + r.slug + '.html',
+      width: 160, height: 160,
+      colorDark: r.color,
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  });
+
+  const sheet = document.getElementById('sheet');
+  sheet.classList.add('on');
+  setTimeout(() => sheet.scrollIntoView({ behavior: 'smooth' }), 100);
+}
+
+document.getElementById('url').addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+</script>
+</body>
+</html>
